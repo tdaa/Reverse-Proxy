@@ -5,10 +5,28 @@
  */
 package reverseproxy;
 
+import java.net.InetAddress;
+
 /**
  *
  * @author Tiago
  */
 public class PDURequest {
+    
+    private InetAddress address;
+
+    public PDURequest(InetAddress address) {
+        this.address = address;
+    }
+
+    public InetAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(InetAddress address) {
+        this.address = address;
+    }
+    
+    
     
 }

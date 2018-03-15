@@ -20,26 +20,30 @@ import java.util.logging.Logger;
  * @author Tiago
  */
 public class AgenteUDP implements Runnable {
-    private MulticastSocket multic;
-    private InetAddress address;
+     private final static String address = "239.8.8.8";
+     private static int port = 8888;
     
     public AgenteUDP() throws SocketException, IOException{
-        this.multic=new MulticastSocket(8888);
-        this.address.getByName("239.8.8.8");
+        
     }
     
     @Override
     public void run(){
         try{
-            multic.joinGroup(address);
-            byte buf[] = new byte[1024];
-            DatagramPacket pack = new DatagramPacket(buf, buf.length);
-            multic.receive(pack);
-            System.out.println("Received data from: " + pack.getAddress().toString() +
-                ":" + pack.getPort() + " with length: " +
-                pack.getLength());
-            System.out.write(pack.getData(),0,pack.getLength());
-            System.out.println();
+            InetAddress addr = InetAddress.getByName("239.8.8.8");
+            byte[] buf = new byte[256];
+            try(MulticastSocket ms = new MulticastSocket(port)) {
+                
+                ms.joinGroup(addr);
+                while(true){
+                    DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
+                    ms.receive(msgPacket);
+                    String msg = new String(buf,0,buf.length);
+                    System.out.println("Socket 1 receive msg: " + msg);
+                }
+                
+            }
+            
         } catch(IOException ex){
             Logger.getLogger(AgenteUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
