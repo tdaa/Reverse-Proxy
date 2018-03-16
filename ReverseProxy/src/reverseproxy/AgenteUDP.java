@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.net.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,8 +21,9 @@ import java.util.logging.Logger;
  * @author Tiago
  */
 public class AgenteUDP implements Runnable {
-     private final static String address = "239.8.8.8";
-     private static int port = 8888;
+     String address = "239.8.8.8";
+     int port = 8888;
+     protected byte[] buf = new byte[256];
     
     public AgenteUDP() throws SocketException, IOException{
         
@@ -30,20 +32,22 @@ public class AgenteUDP implements Runnable {
     @Override
     public void run(){
         try{
-            InetAddress addr = InetAddress.getByName("239.8.8.8");
-            byte[] buf = new byte[256];
-            try(MulticastSocket ms = new MulticastSocket(port)) {
-                
-                ms.joinGroup(addr);
-                while(true){
-                    DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
-                    ms.receive(msgPacket);
-                    String msg = new String(buf,0,buf.length);
-                    System.out.println("Socket 1 receive msg: " + msg);
+            MulticastSocket s = new MulticastSocket(8888);
+            InetAddress group = InetAddress.getByName("239.8.8.8");
+            s.joinGroup(group);
+            while (true) {
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                s.receive(packet);
+        
+                String received = new String(
+                packet.getData(), 0, packet.getLength());
+                System.out.println(received);
+                if ("end".equals(received)) {
+                    break;
                 }
-                
             }
-            
+            s.leaveGroup(group);
+            s.close();
         } catch(IOException ex){
             Logger.getLogger(AgenteUDP.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -2,3 +2,5 @@
 *.class
 *.properties
 
+/ReverseProxy/build/
+/ReverseProxy/dist/
