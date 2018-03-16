@@ -9,6 +9,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.net.*;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -60,7 +62,8 @@ public class MonitorUDP implements Runnable{
                 System.out.println("server send packet with message: " + msg);
                 Thread.sleep(500);
             }
-            } catch (UnknownHostException ex) {
+       } catch (UnknownHostException ex) {
+
            Logger.getLogger(MonitorUDP.class.getName()).log(Level.SEVERE, null, ex);
        }
         } catch (SocketException ex) {
