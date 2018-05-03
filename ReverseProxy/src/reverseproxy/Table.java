@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @author franciscolira
  */
 public class Table {
-    private Map<InetAddress,StateTable> servidores;
+    private Map<SocketAddress,StateTable> servidores;
     
     public Table(){
         this.servidores = new HashMap();
@@ -42,5 +42,15 @@ public class Table {
             map.put(entry.getKey(),entry.getValue());
         });
         return map;
+    }
+
+    //media entre ram e cpu
+    public synchronized StateTable bestServer(){
+        long media;
+        TreeSet<long> estado = new TreeSet<>(new MediaComparator());
+        for(Map.Entry<SocketAddress,StateTable> me : servidores.entrySet()){
+            estado.add(me.getValue());
+        }
+        return estado.first();
     }
 }

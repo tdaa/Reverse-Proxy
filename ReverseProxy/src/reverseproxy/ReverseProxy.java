@@ -5,17 +5,42 @@
  */
 package reverseproxy;
 
+import java.net.ServerSocket;
+
 /**
  *
  * @author Tiago
  */
 public class ReverseProxy {
+    
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args){
+
+        ServerSocket ss;
+        Server s;
+
+        try {
+            
+            Table tab = new Table();
+            MonitorUDP m = new MonitorUDP(tab);
+            
+            m.start();
+
+            ss = new ServerSocket(80);
+            while((s=ss.accept())!=null){
+                TreatClient tc = new TreatClient(tab,s);
+                tc.start();
+            }
+
+            m.join();
+            ss.close();
+            
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    
     }
+
     
 }
