@@ -17,13 +17,13 @@ public class StateTable {
     private final SocketAddress ip;
     private long totalSent;
     private long losses;
-    private byte cpuUsage;
-    private int freeRam;
+    private double cpuUsage;
+    private long freeRam;
     private int rtt;
     private int largbanda;
 
 
-    public StateTable(SocketAddress ip, byte cpuUsage, int freeRam, int rtt, int largbanda) {
+    public StateTable(SocketAddress ip, double cpuUsage, long freeRam, int rtt, int largbanda) {
         this.ip = ip;
         this.totalSent = 0;
         this.losses = 0;
@@ -44,11 +44,11 @@ public class StateTable {
         return losses;
     }
 
-    public synchronized byte getCpuUsage() {
+    public synchronized double getCpuUsage() {
         return cpuUsage;
     }
 
-    public synchronized int getFreeRam() {
+    public synchronized long getFreeRam() {
         return freeRam;
     }
     
@@ -64,11 +64,11 @@ public class StateTable {
         this.losses = l;
     }
 
-    public synchronized byte setCpuUsage(byte cpu) {
+    public synchronized byte setCpuUsage(double cpu) {
         this.cpuUsage = cpu;
     }
 
-    public synchronized int setFreeRam(int ram) {
+    public synchronized int setFreeRam(long ram) {
         this.freeRam = ram;
     }
     
