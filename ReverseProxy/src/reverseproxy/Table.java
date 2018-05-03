@@ -12,13 +12,12 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
 
-
 /**
  *
  * @author franciscolira
  */
 public class Table {
-    private Map<SocketAddress,StateTable> servidores;
+    private Map<InetAddress,StateTable> servidores;
     
     public Table(){
         this.servidores = new HashMap();

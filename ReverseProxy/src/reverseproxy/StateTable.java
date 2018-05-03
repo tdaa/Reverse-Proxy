@@ -92,7 +92,7 @@ public class StateTable {
         sb.append(",freeRam=").append(freeRam).append("MB]");
         sb.append(",rtt=").append(rtt).append("]");
         sb.append(",larguraBanda=").append(largbanda).append("]");
-        
+       
         return sb.toString();
     }
 }
