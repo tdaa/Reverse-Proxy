@@ -28,7 +28,7 @@ public class TreatClient implements Runnable{
 
         try {
         
-            System.out.println("Cliente em processo! YaHoooooooo!");
+            System.out.println("Cliente conectado! YaHoooooooo!");
             
             InputStream ist = this.clientSocket.getInputStream();
             OutputStream ost = this.clientSocket.getOutputStream();
@@ -37,13 +37,26 @@ public class TreatClient implements Runnable{
             InputStream istServer = this.serverSocket.getInputStream();
             OutputStream ostServer = this.serverSocket.getOutputStream();
 
-            byte[] dados = new byte[256];
+            byte[] dadosCliente = new byte[256];
+            byte[] dadosServer = new byte[256];
 
-            while(ist.read(data) != -1){
+            while(ist.read(dadosCliente) != -1){
                 
+                ostServer.write(dadosCliente);
+                dadosCliente = null;
+
+                while(istServer.read(dadosServer) != -1){
+                    ost.write(dadosServer);
+                    dadosServer=null;
+                }
+
+                dadosCliente = new byte[256];
+                dadosServer = new byte[256];
+
             }
 
-
+            ost.flush();
+            ostServer.flush();
 
             
         } catch (Exception e) {
