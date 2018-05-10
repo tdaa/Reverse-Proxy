@@ -22,11 +22,12 @@ public class ReverseProxy {
         try {
             
             Table tab = new Table();
+          
             MonitorUDP m = new MonitorUDP(tab);
-            
             m.start();
 
             ss = new ServerSocket(80);
+            
             while((s=ss.accept())!=null){
                 TreatClient tc = new TreatClient(tab,s);
                 tc.start();
