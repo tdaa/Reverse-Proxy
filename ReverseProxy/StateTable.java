@@ -27,22 +27,23 @@ import javax.crypto.spec.SecretKeySpec;
 public class StateTable {
     private final SocketAddress ip;
     private byte[] totalSent;
-    private float cpuUsage;
+    private byte[] cpuUsage;
     private byte[] freeRam;
-    private long rtt;
-    private LocalDateTime tempo;
-    private double largbanda;
-    private LocalDateTime inicio;
+    private byte[] rtt;
+    private byte[] largbanda;
+    private byte[] inicio;
+    private byte[] tempo;
 
 
     public StateTable(SocketAddress ip, float cpuUsage, float freeRam, long rtt, double largbanda) {
         this.ip = ip;
-        this.totalSent = null;
-        this.cpuUsage = cpuUsage;
+        this.settotalSent(0);
+        this.setCpuUsage(cpuUsage);
         this.setFreeRam(freeRam);
-        this.rtt = rtt;
-        this.largbanda =largbanda;
-        this.tempo= LocalDateTime.now();
+        this.setRTT(rtt);
+        this.setLG(largbanda);
+        this.setInicio();
+        this.setTempo();
     }
 
     public synchronized SocketAddress getIP() {
@@ -50,7 +51,7 @@ public class StateTable {
     }
 
     public synchronized long gettotalSent() {
-        try{
+        try {
             String key = "-Hello, World!!!";
             Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -58,18 +59,29 @@ public class StateTable {
             String decrypted = new String(cipher.doFinal(totalSent));
             long tmp = Long.parseLong(decrypted, 10);
             return tmp;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return 0;
         }
     }
 
     public synchronized float getCpuUsage() {
-        return cpuUsage;
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(cpuUsage));
+            float tmp = Float.parseFloat(decrypted);
+            return tmp;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
     public synchronized float getFreeRam() {
-        try{
+        try {
             String key = "-Hello, World!!!";
             Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -77,26 +89,77 @@ public class StateTable {
             String decrypted = new String(cipher.doFinal(freeRam));
             float tmp = Float.parseFloat(decrypted);
             return tmp;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return 0;
         }
     }
-    
-    public synchronized long getRTT(){
-        return rtt;
+
+    public synchronized long getRTT() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(rtt));
+            long tmp = Long.parseLong(decrypted, 10);
+            return tmp;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
-    public synchronized LocalDateTime getTempo(){
-        return this.tempo;
+
+    public synchronized LocalDateTime getTempo() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(tempo));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            LocalDateTime dateTime = LocalDateTime.parse(decrypted, formatter);
+            return dateTime;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
-    public synchronized LocalDateTime getInicio(){
-        return this.inicio;
+    public synchronized LocalDateTime getInicio() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(inicio));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            LocalDateTime dateTime = LocalDateTime.parse(decrypted, formatter);
+            return dateTime;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
-    
+
+    public synchronized double getLargBand() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(largbanda));
+            long tmp = Double.parseDouble(decrypted, 10);
+            return tmp;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+    }
+
     public synchronized void settotalSent(long ts) {
-        try{
+        try {
             String key = "-Hello, World!!!";
             Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -104,21 +167,27 @@ public class StateTable {
             String tmp = String.valueOf(ts);
             byte[] encrypted = cipher.doFinal(tmp.getBytes());
             this.totalSent = encrypted;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public synchronized void setLG(double l){
-        this.largbanda = l;
-    }
-
     public synchronized void setCpuUsage(float cpu) {
-        this.cpuUsage = cpu;
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            String tmp = Float.toString(cpu);
+            byte[] encrypted = cipher.doFinal(tmp.getBytes());
+            this.cpuUsage = encrypted;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public synchronized void setFreeRam(float ram) {
-        try{
+        try {
             String key = "-Hello, World!!!";
             Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -126,25 +195,72 @@ public class StateTable {
             String tmp = Float.toString(ram);
             byte[] encrypted = cipher.doFinal(tmp.getBytes());
             this.freeRam = encrypted;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public synchronized void setRTT(long r){
-        this.rtt=r;
-    }
-    
-    public synchronized void setLargBand(double l){
-        this.largbanda = l;
-    }
-    
-    public synchronized void setTempo(){
-        this.tempo = LocalDateTime.now();
+
+    public synchronized void setRTT(long r) {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            String tmp = String.valueOf(r);
+            byte[] encrypted = cipher.doFinal(tmp.getBytes());
+            this.totalSent = encrypted;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public synchronized void setInicio(){
-        this.inicio = LocalDateTime.now();
+    public synchronized void setLargBand(double l) {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            String tmp = Double.toString(l);
+            byte[] encrypted = cipher.doFinal(tmp.getBytes());
+            this.totalSent = encrypted;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
+
+    public synchronized void setTempo() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            LocalDateTime dateTime = LocalDateTime.now();
+            String formattedDateTime = dateTime.format(formatter);
+            byte[] encrypted = cipher.doFinal(formattedDateTime.getBytes());
+            this.tempo = encrypted;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public synchronized void setInicio() {
+        try {
+            String key = "-Hello, World!!!";
+            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            LocalDateTime dateTime = LocalDateTime.now();
+            String formattedDateTime = dateTime.format(formatter);
+            byte[] encrypted = cipher.doFinal(formattedDateTime.getBytes());
+            this.inicio = encrypted;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
 }
 
