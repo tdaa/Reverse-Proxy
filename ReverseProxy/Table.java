@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reverseproxy;
+
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +11,10 @@ import java.util.PriorityQueue;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.HashMap;
+import java.util.*;
+import java.lang.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -20,14 +24,17 @@ public class Table {
     private Map<SocketAddress,StateTable> servidores;
     
     public Table(){
-        this.servidores = new HashMap();
+        this.servidores = new HashMap<SocketAddress,StateTable>();
     }
-    
 
     public int size(){
         return  servidores.size();
     }
     
+    public void add(SocketAddress sa, StateTable st){
+        servidores.put(sa,st);
+    }
+/*
     public synchronized ArrayList<StateTable> getArrayList(){
         ArrayList<StateTable> list = new ArrayList<>();
         for(Map.Entry<SocketAddress, StateTable> entry: servidores.entrySet()){
@@ -35,7 +42,7 @@ public class Table {
         }
         return list;
     }
-    
+*/    
     public synchronized HashMap<SocketAddress,StateTable> getServidores(){
         HashMap<SocketAddress,StateTable> map = new HashMap<>();
         servidores.entrySet().forEach((entry) -> {
@@ -44,10 +51,17 @@ public class Table {
         return map;
     }
 
+    public synchronized void setServidores(HashMap<SocketAddress,StateTable> t){
+        this.servidores.clear();
+        t.entrySet().forEach((entry) -> {
+            this.servidores.put(entry.getKey(),entry.getValue());
+        });
+    }
+
     //media entre ram e cpu
     public synchronized StateTable bestServer(){
         long media;
-        TreeSet<long> estado = new TreeSet<>(new MediaComparator());
+        TreeSet<StateTable> estado = new TreeSet<StateTable>(new MediaComparator());
         for(Map.Entry<SocketAddress,StateTable> me : servidores.entrySet()){
             estado.add(me.getValue());
         }
