@@ -3,6 +3,7 @@ import java.net.SocketAddress;
 import java.sql.Time;
 import java.lang.StringBuilder;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import java.security.InvalidKeyException;
@@ -41,7 +42,7 @@ public class StateTable {
         this.setCpuUsage(cpuUsage);
         this.setFreeRam(freeRam);
         this.setRTT(rtt);
-        this.setLG(largbanda);
+        this.setLargBand(largbanda);
         this.setInicio();
         this.setTempo();
     }
@@ -123,7 +124,7 @@ public class StateTable {
             return dateTime;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return 0;
+            return LocalDateTime.now();
         }
     }
 
@@ -139,7 +140,7 @@ public class StateTable {
             return dateTime;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return 0;
+            return LocalDateTime.now();
         }
     }
 
@@ -150,7 +151,7 @@ public class StateTable {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, aesKey);
             String decrypted = new String(cipher.doFinal(largbanda));
-            long tmp = Double.parseDouble(decrypted, 10);
+            double tmp = Double.parseDouble(decrypted);
             return tmp;
         } catch (Exception e) {
             System.out.println(e.getMessage());
