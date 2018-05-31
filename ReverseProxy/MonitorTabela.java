@@ -63,7 +63,7 @@ public class MonitorTabela implements Runnable{
                 sadd = new ArrayList<SocketAddress>();
 
                 //  System.out.println("server send packet with message: " + msg);
-                  Thread.sleep(2000);
+                  Thread.sleep(1000);
       	   }
         } catch (Exception ex) {
             ex.printStackTrace();
